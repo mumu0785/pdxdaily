@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>跨域问题解决的几种方式+ jquery each 使用</title>
+		<script type="text/javascript" src="js/jQuery-2.2.0.min.js" ></script>
+	</head>
+	
+	<body>
+		<script>
+			$(function(){
+//			          方式一:$.getJSON() 自我感觉时最简单的解决跨域问题的方式
+//				$.getJSON("https://api.douban.com/v2/book/search?q=javascript&count=1&callback=?",function(data){
+//					console.log(data);
+//				})
+				
+//				方式二: jsonp + ajax
+
+				
+				$.ajax({
+					type : "GET",
+					url : "https://api.douban.com/v2/book/search",
+					async : true,
+					dataType : "jsonp",
+//					jsonpCallback : 'callback', //设置回调函数名
+					data : {
+	                    q : "javascript", 
+	                    count : 1
+	                }, 
+	                success: function(response, status, xhr){
+	                    console.log('状态为：' + status + ',状态是：' + xhr.statusText);
+	                    console.log(response);
+	                    var books = response.books[0].tags;
+	                    console.log(books); //books 为数组, 数组包含8个json串
+	                    
+//	                    each用法 循环数组的每一个元素, i是数组的下标 ，n代表数组的每一个数组元素
+	                    $.each(books,function(i,n){
+	                    	console.log(i+"-"+n.count+"-"+n.name+"-"+n.title);
+							console.log(i);
+							console.log(n);
+	                    })   
+	                }
+				})
+				function callback(data){
+					console.log(data);
+				}
+		
+				
+				
+			})
+		</script>
+	</body>
+</html>
